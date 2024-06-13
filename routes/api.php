@@ -12,5 +12,3 @@ Route::get('/user', function (Request $request) {
 Route::get('/users', [UserController::class, 'getAll']);
 Route::get('/appointment', [AppointmentController::class, 'getAll']);
 Route::post('/appointment', [AppointmentController::class, 'Store']);
-
-
