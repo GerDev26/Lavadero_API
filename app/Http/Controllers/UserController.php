@@ -8,6 +8,6 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function getAll(){
-        return User::all();
+        return User::with('appointment', 'role')->get();
     }
 }

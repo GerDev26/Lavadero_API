@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Resources\ApiResponseResource;
+use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use Exception;
 use Illuminate\Http\Request;
@@ -9,39 +12,30 @@ use Illuminate\Support\Facades\Validator;
 
 class AppointmentController extends Controller
 {
-    public function getAll(){
-        return Appointment::all();
+    public function getAll()
+    {
+        $appointments = Appointment::with('service', 'user', 'vehicle')->get();
+        $formattedAppointments = AppointmentResource::collection($appointments);
+        
+        $response = new ApiResponseResource([
+            'data' => $formattedAppointments,
+            'success' => true,
+            'message' => 'Showing all appointments',
+        ]);
+    
+        return response()->json($response, 200);
     }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'price' => 'required|numeric'
+    public function store(StoreAppointmentRequest $request)
+    {   
+        $appointment = Appointment::create([
+            'user_id' => $request->user_id,
+            'service_id' => $request->service_id,
+            'vehicle_id' => $request->vehicle_id,
+            'price' => $request->price
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => 'Validation Error',
-                'messages' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $appointment = Appointment::create([
-                'price' => $request->price
-            ]);
-
-            if (!$appointment) {
-                throw new Exception('No se completó la operación', 402);
-            }
-
-            return response()->json($appointment, 201);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Exception Error',
-                'message' => $e->getMessage()
-            ], $e->getCode() ?: 500);
-        }
+        $formattedAppointment = new AppointmentResource($appointment);
+        return response()->json($formattedAppointment, 201);
     }
 }

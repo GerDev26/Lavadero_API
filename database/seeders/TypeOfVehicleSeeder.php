@@ -19,13 +19,13 @@ class TypeOfVehicleSeeder extends Seeder
         if ($affectedRows === 0) {
             $data = [
                 [
-                    'description' => 'auto'
+                    'description' => 'auto',
                 ],
                 [
-                    'description' => 'moto'
+                    'description' => 'moto',
                 ],
                 [
-                    'description' => 'camioneta'
+                    'description' => 'camioneta',
                 ],
             ];
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Appointment extends Model
+class Vehicle extends Model
 {
     use HasFactory;
 
@@ -14,21 +14,18 @@ class Appointment extends Model
     protected $attributes = [
         'state' => 1
     ];
+
     protected $fillable = [
         'state',
-        'price',
-        'user_id',
-        'service_id',
-        'vehicle_id'
+        'type_id',
+        'domain',
+        'user_id'
     ];
 
+    public function typeOfVehicle(){
+        return $this->belongsTo(TypeOfVehicle::class, 'type_id');
+    }
     public function user(){
         return $this->belongsTo(User::class);
-    }
-    public function service(){
-        return $this->belongsTo(Service::class);
-    }
-    public function vehicle(){
-        return $this->belongsTo(Vehicle::class);
     }
 }
