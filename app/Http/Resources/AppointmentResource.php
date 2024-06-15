@@ -14,22 +14,14 @@ class AppointmentResource extends JsonResource
     public function toArray($request)
 
     {
-        $isActive = $this->state === 1 ? true : false;
-
-        $createdAtFormated = formatDatetime($this->created_at);
-        $updatedAtFormated = formatDatetime($this->updated_at);
-
-        
         return [
             'id' => $this->id,
-            'isActive' => $isActive,
+            'state' => $this->state,
             'user' => $this->user->name,
             'service' => $this->service->description,
             'vehicle' => $this->vehicle->domain,
-            'created_date' => $createdAtFormated['date'],
-            'created_time' => $createdAtFormated['time'],
-            'updated_date' => $updatedAtFormated['date'],
-            'updated_time' => $updatedAtFormated['time'],
+            'date' => $this->date,
+            'time' => $this->time,
         ];
     }
 }

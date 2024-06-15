@@ -26,7 +26,7 @@ class UserFactory extends Factory
 
         return [
             'name' => $this->faker->firstName(),
-            'lastname' => $this->faker->lastName(),
+            'surname' => $this->faker->lastName(),
             'phone_number' => fake()->phoneNumber(),
             'key' => $this->faker->randomNumber(),
             'role_id' => $this->faker->numberBetween(1, 3),

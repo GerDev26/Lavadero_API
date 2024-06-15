@@ -28,7 +28,9 @@ class StoreAppointmentRequest extends FormRequest
             'price' => 'required|numeric',
             'user_id' => 'required|integer|min:1|exists:users,id|exists:vehicles,user_id',
             'service_id' => 'required|integer|min:1|exists:services,id',
-            'vehicle_id' => 'required|integer|min:1|exists:vehicles,id'
+            'vehicle_id' => 'required|integer|min:1|exists:vehicles,id',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i'
         ];
     }
 

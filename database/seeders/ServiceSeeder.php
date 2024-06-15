@@ -20,19 +20,15 @@ class ServiceSeeder extends Seeder
             $data = [
                 [
                     'description' => 'lavado estandar',
-                    'duration' => 30
                 ],
                 [
                     'description' => 'lavado premium',
-                    'duration' => 60
                 ],
                 [
                     'description' => 'motor',
-                    'duration' => 30
                 ],
                 [
                     'description' => 'tapizado',
-                    'duration' => 30
                 ],
             ];
 

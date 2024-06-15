@@ -9,12 +9,15 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $attributes = [
-        'state' => 1
+        'state' => 'En proceso'
     ];
+
     protected $fillable = [
+        'date',
+        'time',
         'state',
         'price',
         'user_id',

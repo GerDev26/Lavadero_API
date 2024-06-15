@@ -16,9 +16,6 @@ class VehicleResource extends JsonResource
     {
         $status = $this->state === 1 ? true : false;
 
-        $createdAtFormated = formatDatetime($this->created_at);
-        $updatedAtFormated = formatDatetime($this->updated_at);
-
         $fullName = $this->user->name. " ". $this->user->lastname;
 
         
@@ -28,12 +25,6 @@ class VehicleResource extends JsonResource
             'user' => $fullName,
             'vehicleDomain' => $this->domain,
             'vehicleType' => $this->typeOfVehicle->description,
-            'datetime' => [
-                'created_date' => $createdAtFormated['date'],
-                'created_time' => $createdAtFormated['time'],
-                'updated_date' => $updatedAtFormated['date'],
-                'updated_time' => $updatedAtFormated['time'],
-            ]
         ];
     }
 }
