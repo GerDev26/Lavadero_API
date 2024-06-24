@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('type_of_vehicles', function(Blueprint $table){
             $table->id();
             $table->string('description');
+            $table->string('image');
         });
     }
 

@@ -24,7 +24,9 @@ class UserController extends Controller
 
         return response()->json($user, 201);
     }
-    public function Hola(Request $request){
-        return $request;
+    public function Destroy($id){
+        $isDeleted = User::destroy($id);
+        $message = $isDeleted ? "Se elimino el registro con exito" : "Error al eliminar el registro";
+        return response()->json(['message' => $message]);
     }
 }

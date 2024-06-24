@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TypeOfVehicleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
@@ -25,18 +27,22 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     
     Route::get('/logout', [AuthController::class, 'logout']);
-    Route::get('/user', [UserController::class, 'getAll']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/vehicle', [VehicleController::class, 'getAll']);
+Route::get('/vehicles', [VehicleController::class, 'getAll']);
 
-Route::post('/user', [UserController::class, 'Store']);
+Route::get('/users', [UserController::class, 'getAll']);
+Route::post('/users', [UserController::class, 'Store']);
+Route::delete('/users/{id}', [UserController::class, 'Destroy']);
 
-Route::get('/vehicle/{id}', [VehicleController::class, 'getById']);
-Route::post('/vehicle', [VehicleController::class, 'Store']);
+Route::get('/vehicles/{id}', [VehicleController::class, 'getById']);
+Route::post('/vehicles', [VehicleController::class, 'Store']);
 
-Route::get('/appointment', [AppointmentController::class, 'getAll']);
-Route::post('/appointment', [AppointmentController::class, 'Store']);
+Route::get('/appointments', [AppointmentController::class, 'getAll']);
+Route::post('/appointments', [AppointmentController::class, 'Store']);
+
+Route::get('/services', [ServiceController::class, 'getAll']);
+Route::get('/typeOfVehicles', [TypeOfVehicleController::class, 'getAll']);
