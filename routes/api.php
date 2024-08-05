@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TypeOfVehicleController;
 use App\Http\Controllers\UserController;
@@ -26,18 +27,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     });
     
-    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+Route::post('/getPasswordToken', [ForgotPasswordController::class, 'getPasswordToken']);
+Route::post('/resetPassword', [ForgotPasswordController::class, 'resetPassword']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/vehicles', [VehicleController::class, 'getAll']);
 
 Route::get('/users', [UserController::class, 'getAll']);
 Route::post('/users', [UserController::class, 'Store']);
 Route::delete('/users/{id}', [UserController::class, 'Destroy']);
 
+Route::get('/vehicles', [VehicleController::class, 'getAll']);
 Route::get('/vehicles/{id}', [VehicleController::class, 'getById']);
 Route::post('/vehicles', [VehicleController::class, 'Store']);
 
