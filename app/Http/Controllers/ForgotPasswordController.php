@@ -15,9 +15,8 @@ class ForgotPasswordController extends Controller
 {
     public function getPasswordToken(Request $request){
         $user = User::where('email', $request->email)->first();
-
         if(!$user){
-            return response()->json('No existe el email');
+            return response()->json("No existe el email $request->email", 404);
         }
         $token = PasswordReset::create([
             'email' => $request->email,

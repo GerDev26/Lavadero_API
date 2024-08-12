@@ -14,15 +14,37 @@ class AppointmentResource extends JsonResource
     public function toArray($request)
 
     {
-        return [
-            'id' => $this->id,
-            'state' => $this->state,
-            'user' => $this->user->name,
-            'service' => $this->service->description,
-            'vehicle' => $this->vehicle->domain,
-            'price' => $this->price,
-            'date' => $this->date,
-            'time' => $this->time,
-        ];
+        if($this->state === 'Reservado') {
+            return [
+                'id' => $this->id,
+                'state' => $this->state,
+                'hour' => $this->hour,
+                'user' => $this->user->name ?? null,
+                'service' => $this->service->service_name ?? null,
+                'vehicle' => [
+                    'domain' => $this->vehicle->domain ?? null,
+                    'type' => $this->vehicle->typeOfVehicle->description ?? null
+                ],
+            ];
+        } elseif($this->state === 'Disponible') {   
+            return [
+                'id' => $this->id,
+                'state' => $this->state,
+                'hour' => $this->hour
+            ];
+        } elseif($this->state === 'Reservado') {
+            return [
+                'id' => $this->id,
+                'state' => $this->state,
+                'hour' => $this->hour,
+                'user' => $this->user->name ?? null,
+                'service' => $this->service->service_name ?? null,
+                'vehicle' => [
+                    'domain' => $this->vehicle->domain ?? null,
+                    'type' => $this->vehicle->typeOfVehicle->description ?? null
+                ],
+            ];
+        }
+
     }
 }

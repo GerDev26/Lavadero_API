@@ -26,11 +26,11 @@ class StoreAppointmentRequest extends FormRequest
     {
         return [
             'price' => 'required|numeric',
-            'user_id' => 'required|integer|min:1|exists:users,id|exists:vehicles,user_id',
-            'service_id' => 'required|integer|min:1|exists:services,id',
-            'vehicle_id' => 'required|integer|min:1|exists:vehicles,id',
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i'
+            'user_id' => 'integer|min:1|exists:users,id|exists:vehicles,user_id',
+            'service_id' => 'integer|min:1|exists:services,id',
+            'vehicle_id' => 'integer|min:1|exists:vehicles,id',
+            'date' => 'required|date_format:Y-m-d',
+            'hour' => 'required|date_format:H:i'
         ];
     }
 

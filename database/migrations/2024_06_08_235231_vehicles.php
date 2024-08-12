@@ -17,11 +17,11 @@ return new class extends Migration
             $table->boolean('state');
             $table->timestamps();
 
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('type_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('type_id')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('type_id')->references('id')->on('type_of_vehicles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('type_id')->references('id')->on('type_of_vehicles')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

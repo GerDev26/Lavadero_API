@@ -12,12 +12,12 @@ class Appointment extends Model
     public $timestamps = false;
 
     protected $attributes = [
-        'state' => 'En proceso'
+        'state' => 'Disponible' //Reservado y Completado
     ];
 
     protected $fillable = [
-        'date',
-        'time',
+        'date_id',
+        'hour',
         'state',
         'price',
         'user_id',
@@ -33,5 +33,8 @@ class Appointment extends Model
     }
     public function vehicle(){
         return $this->belongsTo(Vehicle::class);
+    }
+    public function dates(){
+        return $this->belongsTo(Date::class, 'date_id', 'id');
     }
 }

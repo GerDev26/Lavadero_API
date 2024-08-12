@@ -43,10 +43,14 @@ Route::delete('/users/{id}', [UserController::class, 'Destroy']);
 
 Route::get('/vehicles', [VehicleController::class, 'getAll']);
 Route::get('/vehicles/{id}', [VehicleController::class, 'getById']);
+Route::get('/vehicles/user/{id}', [VehicleController::class, 'getVehiclesByUserId']);
 Route::post('/vehicles', [VehicleController::class, 'Store']);
 
-Route::get('/appointments', [AppointmentController::class, 'getAll']);
-Route::post('/appointments', [AppointmentController::class, 'Store']);
+Route::get('/services', [VehicleController::class, 'getAllServices']);
+Route::get('/typeOfVehicles', [VehicleController::class, 'getAllTypeOfVehicles']);
 
-Route::get('/services', [ServiceController::class, 'getAll']);
-Route::get('/typeOfVehicles', [TypeOfVehicleController::class, 'getAll']);
+Route::get('/dates', [AppointmentController::class, 'getAllDates']);
+Route::get('/appointments', [AppointmentController::class, 'listDatesWithAppointments']);
+Route::post('/appointments', [AppointmentController::class, 'adminStore']);
+Route::get('/appointments/{id}', [AppointmentController::class, 'getAppointmentsByDateId']);
+Route::patch('/appointments/reserve', [AppointmentController::class, 'reserve']);
