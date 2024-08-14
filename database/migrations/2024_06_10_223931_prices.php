@@ -17,11 +17,11 @@ return new class extends Migration
             $table->timestamps();
             $table->date('drop_at');
 
-            $table->unsignedBigInteger('service_id');
-            $table->unsignedBigInteger('type_of_vehicle_id');
+            $table->unsignedBigInteger('service_id')->nullable();
+            $table->unsignedBigInteger('type_of_vehicle_id')->nullable();
 
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('type_of_vehicle_id')->references('id')->on('type_of_vehicles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('type_of_vehicle_id')->references('id')->on('type_of_vehicles')->onDelete('set null')->onUpdate('cascade');
         });
     }
 
