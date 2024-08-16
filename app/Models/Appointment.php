@@ -16,13 +16,13 @@ class Appointment extends Model
     ];
 
     protected $fillable = [
-        'date_id',
         'hour',
+        'date',
         'state',
         'price',
         'user_id',
         'service_id',
-        'vehicle_id'
+        'vehicle_id',
     ];
 
     public function user(){
@@ -33,8 +33,5 @@ class Appointment extends Model
     }
     public function vehicle(){
         return $this->belongsTo(Vehicle::class);
-    }
-    public function dates(){
-        return $this->belongsTo(Date::class, 'date_id', 'id');
     }
 }

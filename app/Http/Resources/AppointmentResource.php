@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppointmentResource extends JsonResource
@@ -12,13 +13,15 @@ class AppointmentResource extends JsonResource
      * @return array
      */
     public function toArray($request)
-
     {
+        $date = Carbon::parse($this->date);
+        $hour = Carbon::parse($this->hour);
         if($this->state === 'Reservado') {
             return [
                 'id' => $this->id,
                 'state' => $this->state,
-                'hour' => $this->hour,
+                'hour' => $hour->format('H:m'),
+                'date' => $date->format('d-m-Y'),
                 'user' => $this->user->name ?? null,
                 'service' => $this->service->service_name ?? null,
                 'vehicle' => [
@@ -30,19 +33,12 @@ class AppointmentResource extends JsonResource
             return [
                 'id' => $this->id,
                 'state' => $this->state,
-                'hour' => $this->hour
+                'hour' => $hour->format('H:m'),
+                'date' => $date->format('d-m-Y'),
             ];
-        } elseif($this->state === 'Reservado') {
+        } elseif($this->state === 'Completado') {
             return [
-                'id' => $this->id,
-                'state' => $this->state,
-                'hour' => $this->hour,
-                'user' => $this->user->name ?? null,
-                'service' => $this->service->service_name ?? null,
-                'vehicle' => [
-                    'domain' => $this->vehicle->domain ?? null,
-                    'type' => $this->vehicle->typeOfVehicle->description ?? null
-                ],
+                'Turno completo'
             ];
         }
 

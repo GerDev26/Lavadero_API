@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\ForgotPassword;
 use App\Models\PasswordReset;
 use App\Models\User;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -23,8 +24,14 @@ class ForgotPasswordController extends Controller
             'token' => Str::random(60),
             'created_at' => now()
         ]);
-        Mail::to($request->email)->send(new ForgotPassword($token, $user));
-        return response()->json(['message' => 'Se envio el token con exito']);
+        try{
+            Mail::to($request->email)->send(new ForgotPassword($token, $user));
+            return response()->json(['message' => 'Se envio el token con exito'], 201);
+        } catch(Error){
+            return response()->json(['error' => 'No se pudo enviar el email'], 400);
+        }
+
+
     }
     public function resetPassword(Request $request) {
 

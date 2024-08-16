@@ -25,12 +25,12 @@ class StoreAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'price' => 'required|numeric',
+            'price' => 'numeric',
             'user_id' => 'integer|min:1|exists:users,id|exists:vehicles,user_id',
             'service_id' => 'integer|min:1|exists:services,id',
             'vehicle_id' => 'integer|min:1|exists:vehicles,id',
-            'date' => 'required|date_format:Y-m-d',
-            'hour' => 'required|date_format:H:i'
+            'date' => 'required',
+            'hour' => 'required',
         ];
     }
 

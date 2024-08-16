@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TypeOfVehicleController;
@@ -24,9 +25,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     });
     Route::middleware('role:cliente')->group(function () {
-
     });
-    
+    Route::post('/users/newVehicle', [ClientController::class, 'newVehicle']);
+    Route::get('/users/vehicles', [UserController::class, 'getUserVehicles']);
+    Route::patch('/appointments/reserve', [ClientController::class, 'reserve']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
@@ -43,14 +45,15 @@ Route::delete('/users/{id}', [UserController::class, 'Destroy']);
 
 Route::get('/vehicles', [VehicleController::class, 'getAll']);
 Route::get('/vehicles/{id}', [VehicleController::class, 'getById']);
-Route::get('/vehicles/user/{id}', [VehicleController::class, 'getVehiclesByUserId']);
 Route::post('/vehicles', [VehicleController::class, 'Store']);
+Route::delete('/vehicles/{id}', [VehicleController::class, 'Destroy']);
 
 Route::get('/services', [VehicleController::class, 'getAllServices']);
 Route::get('/typeOfVehicles', [VehicleController::class, 'getAllTypeOfVehicles']);
 
 Route::get('/dates', [AppointmentController::class, 'getAllDates']);
-Route::get('/appointments', [AppointmentController::class, 'listDatesWithAppointments']);
+Route::get('/appointments', [AppointmentController::class, 'getAllAppointments']);
 Route::post('/appointments', [AppointmentController::class, 'adminStore']);
-Route::get('/appointments/{id}', [AppointmentController::class, 'getAppointmentsByDateId']);
-Route::patch('/appointments/reserve', [AppointmentController::class, 'reserve']);
+Route::get('/appointments/{date}', [AppointmentController::class, 'getAppointmentsByDate']);
+
+

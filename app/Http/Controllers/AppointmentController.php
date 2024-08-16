@@ -10,21 +10,39 @@ use App\Models\Appointment;
 use App\Models\Date;
 use App\Models\User;
 use App\Models\Vehicle;
+use Carbon\Carbon;
+use DateTime;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+use function PHPSTORM_META\map;
 
 class AppointmentController extends Controller
 {
     public function getAllDates()
     {
-        $dates = Date::all();
+        $appointments = Appointment::select('date')->distinct()->where('state', 'Disponible')->get();
+        $dates = $appointments->map(function ($appointment) {
+            $date = Carbon::parse($appointment->date);
+            return [
+                'date' => $date->format('d-m-Y'),
+                'day' => $date->format('j'),
+                'day_name' => $date->format('l'),
+                'month_name' => $date->format('F')
+            ];
+        });
         return response()->json($dates);
+    }
+
+
+    public function getAllAppointments(){
+        $appointments = Appointment::all();
+        return AppointmentResource::collection($appointments);
     }
 
     public function listDatesWithAppointments()
     {
-        $dates = Date::with('appointments')->get();
-        $formattedDates = DateResource::collection($dates);
-        return response()->json($formattedDates, 200);
         $appointments = Appointment::with('service', 'user', 'vehicle', 'dates')->get();
         $formattedAppointments = AppointmentResource::collection($appointments);
     
@@ -33,63 +51,27 @@ class AppointmentController extends Controller
 
     public function adminStore(StoreAppointmentRequest $request)
     {
-        $date = Date::where('date', $request->date)->first();
+        $date = Carbon::parse($request->date);
 
-        $newAppointment = new Appointment();
-
-        $newAppointment->user_id = $request->user_id;
-        $newAppointment->vehicle_id = $request->vehicle_id;
-        $newAppointment->service_id = $request->service_id;
-        $newAppointment->price = $request->price;
-        $newAppointment->hour = $request->hour;
-        $newAppointment->state = $request->state ?? 'Disponible';
-
-        if($date) {
-            $newAppointment->date_id = $date->id;
-        } else {
-            $newDate = Date::create([
-                'date' => $request->date
-            ]);
-            $newAppointment->date_id = $newDate->id;
-        }
-
-        $newAppointment->save();
-
-        $formattedAppointment = new AppointmentResource($newAppointment);
-
-        return response()->json($formattedAppointment, 201);
+        $newAppointment = Appointment::create([
+            'date' => $date->format('Y-m-d'),
+            'hour' => $request->hour,
+            'user_id' => $request->user_id,
+            'vehicle_id' => $request->vehicle_id,
+            'service_id' => $request->service_id,
+            'price' => $request->price,
+            'state' => $request->state ?? 'Disponible',
+        ]);
+        return response()->json(new AppointmentResource($newAppointment), 201);
     }
 
-    public function getAppointmentsByDateId($id)
+    public function getAppointmentsByDate($date)
     {
-        $appointments = Appointment::where('date_id', $id)->get();
 
-        return response()->json($appointments);
-    }
-    public function reserve(ReserveAppointment $request)
-    {
-        $appointments = Appointment::find($request->id);
-        $userVehicles = Vehicle::where('user_id', $request->user_id)->get();
+        $date = Carbon::parse($date);
+        $formattedDate = $date->format('Y-m-d');
+        $appointments = Appointment::where('date', $formattedDate)->where('state', 'Disponible')->get();
 
-        $userHasRequestVehicle = $userVehicles->has($request->vehicle_id);
-        $isAppointmentReserved = $appointments->state === 'Reservado';
-
-
-        if(!$userHasRequestVehicle){
-            return response()->json(['error' => 'El usuario no tiene ese vehiculo'], 400);
-        }
-        
-        if($isAppointmentReserved) {
-            return response()->json(['error' => 'El turno ya se reservo'], 400);
-        }
-        
-        $appointments->user_id = $request->user_id;
-        $appointments->vehicle_id = $request->vehicle_id;
-        $appointments->service_id = $request->service_id;
-        $appointments->state = 'Reservado';
-
-        $appointments->save();
-
-        return response()->json(['message' => 'Turno reservado con exito'], 200);
+        return response()->json(AppointmentResource::collection($appointments));
     }
 }
