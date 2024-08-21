@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TypeOfVehicleSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(ServiceSeeder::class);
-        $this->call(AdminSeeder::class);
+        $this->call(UserSeeder::class);
         User::factory(10)->create();
         Appointment::factory(40)->create();
         Vehicle::factory(10)->create();

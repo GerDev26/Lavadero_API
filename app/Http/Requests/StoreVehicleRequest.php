@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class StoreVehicleRequest extends FormRequest
 {
@@ -23,28 +23,29 @@ class StoreVehicleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $userRole = Auth::user()->role->description;
+
+        $generalValidations = [
             'domain' => 'required|string|min:7',
-            'user_id' => 'required|integer|min:1|exists:users,id',
             'type_id' => 'required|integer|min:1|exists:type_of_vehicles,id',
         ];
-    }
-    
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
-     */
-    protected function failedValidation(Validator $validator)
-    {
+        
+        switch ($userRole) {
+            case 'administrador':
+                return array_merge($generalValidations, [
+                    'user_id' => 'required|integer|min:1|exists:users,id',
+                ]);
+            
+            case 'empleado':
+                return $generalValidations;
 
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Validation failed',
-            'errors' => $validator->errors(),
-        ], 422));
+            case 'cliente':
+                return $generalValidations;
+
+            default:
+                throw new HttpResponseException(response()->json([
+                    'error' => 'Rol inexistente',
+                ], 403));
+        }
     }
 }

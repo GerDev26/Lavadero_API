@@ -44,16 +44,4 @@ class ClientController extends UserController
             'data' => new AppointmentResource($appointment)
         ], 200);
     }
-    public function newVehicle(StoreClientVehicle $request){
-
-        $userId = Auth::user()->id;
-        
-        $vehicle = Vehicle::create([
-            'domain' => $request->domain,
-            'user_id' => $userId,
-            'type_id' => $request->type_id,
-        ]);
-
-        return response()->json(new VehicleResource($vehicle), 201);
-    }
 }

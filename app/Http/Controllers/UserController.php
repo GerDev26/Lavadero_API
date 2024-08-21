@@ -39,13 +39,12 @@ class UserController extends Controller
         $userId = Auth::user()->id;
         
         $user = User::find($userId);
-        
         if(!$user) {
             return response()->json(['error' => 'El usuario no existe'], 400);
         }
 
         $vehicles = Vehicle::where('user_id', $userId)->get();
-
+        
         if($vehicles->isEmpty()) {
             return response()->json(['error' => 'El usuario no tiene vehiculos'], 400);
         }
