@@ -24,7 +24,7 @@ class ClientController extends UserController
         $isAppointmentReserved = $appointment->state === 'Reservado';
 
 
-        if(!$userHasRequestVehicle){
+        if(!$userHasRequestVehicle) {
             return response()->json(['error' => 'El usuario no tiene ese vehiculo'], 400);
         }
         

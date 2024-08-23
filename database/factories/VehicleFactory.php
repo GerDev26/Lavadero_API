@@ -22,7 +22,7 @@ class VehicleFactory extends Factory
         $amoutTypes = TypeOfVehicle::count();
         $randomUser = $this->faker->numberBetween(1, $amoutUsers);
         $randomType = $this->faker->numberBetween(1, $amoutTypes);
-        $domain = Str::random(6);
+        $domain = Str::random(7);
         return [
             'state' => 1,
             'domain' => $domain,

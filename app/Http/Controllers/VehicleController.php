@@ -33,35 +33,38 @@ class VehicleController extends Controller
         return response()->json(['status' => false, 'message' => 'Invalid id', 'data' => '']);
     }
 
-    public function Store(StoreVehicleRequest $request){
+    public function Store(StoreVehicleRequest $request)
+    {
         $user = Auth::user();
+
         switch ($user->role->description) {
+            
             case 'administrador' | 'empleado':
-                $vehicle = Vehicle::where('domain', $request->domain)->where('user_id', $request->user_id)->first();
+                $vehicle = Vehicle::where('domain', $request->vehicleDomain)->where('user_id', $request->user_id)->first();
         
                 if($vehicle){
                     return response()->json(['message' => 'Ya tienes este vehiculo cargado'], 400);
                 }
 
                 $vehicle = Vehicle::create([
-                    'domain' => $request->domain,
+                    'domain' => $request->vehicleDomain,
                     'user_id' => $request->user_id,
-                    'type_id' => $request->type_id,
+                    'type_id' => $request->vehicleType,
                 ]);
         
                 return response()->json(new VehicleResource($vehicle), 201);
                 
             case 'cliente':
-                $vehicle = Vehicle::where('domain', $request->domain)->where('user_id', $user->id)->first();
+                $vehicle = Vehicle::where('domain', $request->vehicleDomain)->where('user_id', $user->id)->first();
         
                 if($vehicle){
                     return response()->json(['message' => 'Ya tienes este vehiculo cargado'], 400);
                 }
                 
                 $vehicle = Vehicle::create([
-                    'domain' => $request->domain,
+                    'domain' => $request->vehicleDomain,
                     'user_id' => $user->id,
-                    'type_id' => $request->type_id,
+                    'type_id' => $request->vehicleType,
                 ]);
         
                 return response()->json(new VehicleResource($vehicle), 201);
@@ -137,15 +140,15 @@ class VehicleController extends Controller
                 break;
         }
 
-        $vehicle->domain = $request->domain ?? $vehicle->domain;
-        $vehicle->type_id = $request->type_id ?? $vehicle->type_id;
+        $vehicle->domain = $request->vehicleDomain ?? $vehicle->domain;
+        $vehicle->type_id = $request->vehicleType ?? $vehicle->type_id;
         $isSaved = $vehicle->save();
 
         if(!$isSaved) {
             return response()->json(['error' => 'No se pudo actualizar'], 400);
         }
 
-        return response()->json(['message' => 'Se actualizo el registro con exito'], 200);
+        return response()->json(new VehicleResource($vehicle) , 200);
     }
     public function getAllTypeOfVehicles(){
         return TypeOfVehicle::all();

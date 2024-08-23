@@ -24,10 +24,7 @@ class AppointmentResource extends JsonResource
                 'date' => $date->format('d-m-Y'),
                 'user' => $this->user->name ?? null,
                 'service' => $this->service->service_name ?? null,
-                'vehicle' => [
-                    'domain' => $this->vehicle->domain ?? null,
-                    'type' => $this->vehicle->typeOfVehicle->description ?? null
-                ],
+                'vehicle' => new VehicleResource($this->vehicle)
             ];
         } elseif($this->state === 'Disponible') {   
             return [

@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +25,8 @@ class StoreVehicleRequest extends FormRequest
         $userRole = Auth::user()->role->description;
 
         $generalValidations = [
-            'domain' => 'required|string|min:7',
-            'type_id' => 'required|integer|min:1|exists:type_of_vehicles,id',
+            'vehicleDomain' => 'required|string|min:7|max:7',
+            'vehicleType' => 'required|integer|min:1|exists:type_of_vehicles,id',
         ];
         
         switch ($userRole) {

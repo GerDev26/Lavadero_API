@@ -44,19 +44,19 @@ class UserSeeder extends Seeder
                     ]);
             
                     Vehicle::create([
-                        'domain' => 'VLL199',
+                        'domain' => 'AVLL199',
                         'user_id' => $ger->id,
                         'type_id' => 2,
                         'state' => 1
                     ]);
                     Vehicle::create([
-                        'domain' => 'VLL199',
+                        'domain' => 'AVLL199',
                         'user_id' => $romi->id,
                         'type_id' => 2,
                         'state' => 1
                     ]);
                     Vehicle::create([
-                        'domain' => 'VLL199',
+                        'domain' => 'AVLL199',
                         'user_id' => $fede->id,
                         'type_id' => 2,
                         'state' => 1
