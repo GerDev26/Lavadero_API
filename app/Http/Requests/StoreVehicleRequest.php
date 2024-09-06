@@ -25,7 +25,7 @@ class StoreVehicleRequest extends FormRequest
         $userRole = Auth::user()->role->description;
 
         $generalValidations = [
-            'vehicleDomain' => 'required|string|min:7|max:7',
+            'vehicleDomain' => 'required|string|min:6|max:7',
             'vehicleType' => 'required|integer|min:1|exists:type_of_vehicles,id',
         ];
         

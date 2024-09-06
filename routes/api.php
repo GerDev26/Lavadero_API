@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/vehicles', 'getUserVehicles');
         Route::post('/', 'Store');
         Route::delete('/{id}', 'Destroy');
+        Route::get('/role', 'checkRole');
     });
     Route::get('/users/appointments', [AppointmentController::class, 'userAppointments']);
     Route::delete('appointments/{id}', [AppointmentController::class, 'Destroy']);

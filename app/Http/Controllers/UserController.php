@@ -15,6 +15,9 @@ class UserController extends Controller
     {
         return User::with('role')->get();
     }
+    public function checkRole() {
+        return response()->json(['role' => Auth::user()->role->description], 200);
+    }
     public function Store(StoreUserRequest $request)
     {
 
