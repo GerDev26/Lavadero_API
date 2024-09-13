@@ -129,6 +129,12 @@ class VehicleController extends Controller
                 break;
 
             case 'cliente':
+                $updateVehicle = Vehicle::where('domain', $request->vehicleDomain)->where('user_id', $user->id)->first();
+        
+                if($updateVehicle){
+                    return response()->json(['message' => 'Ya tienes este vehiculo cargado'], 400);
+                }
+                
                 $userId = $user->id;
                 if($userId != $vehicle->user_id) {
                     return response()->json(['error' => 'Este no es tu vehiculo'], 401);

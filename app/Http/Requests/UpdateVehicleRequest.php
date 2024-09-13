@@ -24,7 +24,7 @@ class UpdateVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'vehicleDomain' => 'sometimes|string|min:7|max:7',
+            'vehicleDomain' => 'sometimes|string|min:6|max:7',
             'vehicleType' => 'sometimes|integer|min:1|exists:type_of_vehicles,id',
         ];
     }
