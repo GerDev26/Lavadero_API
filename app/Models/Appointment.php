@@ -12,7 +12,7 @@ class Appointment extends Model
     public $timestamps = false;
 
     protected $attributes = [
-        'state' => 'Disponible' //Reservado y Completado
+        'state' => 'Disponible' //Reservado y Completo
     ];
 
     protected $fillable = [

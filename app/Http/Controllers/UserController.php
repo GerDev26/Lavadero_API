@@ -47,10 +47,6 @@ class UserController extends Controller
         }
 
         $vehicles = Vehicle::where('user_id', $userId)->get();
-        
-        if($vehicles->isEmpty()) {
-            return response()->json(['error' => 'El usuario no tiene vehiculos'], 400);
-        }
 
         $formattedVehicles = VehicleResource::collection($vehicles);
         return response()->json($formattedVehicles);

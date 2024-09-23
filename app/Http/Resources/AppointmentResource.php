@@ -22,7 +22,7 @@ class AppointmentResource extends JsonResource
                 'state' => $this->state,
                 'hour' => $hour->format('H:m'),
                 'date' => $date->format('d-m-Y'),
-                'user' => $this->user->name ?? null,
+                'user' => $this->user ?? null,
                 'service' => $this->service->service_name ?? null,
                 'vehicle' => new VehicleResource($this->vehicle)
             ];
@@ -33,9 +33,15 @@ class AppointmentResource extends JsonResource
                 'hour' => $hour->format('H:m'),
                 'date' => $date->format('d-m-Y'),
             ];
-        } elseif($this->state === 'Completado') {
+        } elseif($this->state === 'Completo') {
             return [
-                'Turno completo'
+                'id' => $this->id,
+                'state' => $this->state,
+                'hour' => $hour->format('H:m'),
+                'date' => $date->format('d-m-Y'),
+                'user' => $this->user ?? null,
+                'service' => $this->service->service_name ?? null,
+                'vehicle' => new VehicleResource($this->vehicle)
             ];
         }
 

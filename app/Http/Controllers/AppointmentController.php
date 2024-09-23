@@ -91,7 +91,50 @@ class AppointmentController extends Controller
 
                 return response()->json(['message' => 'Se elimino con exito'], 200);
             case 'empleado':
-                return 'Sos empleado capo';
+                return response()->json(['error' => 'No estas autorizado'], 403);
+            case 'cliente':
+                return response()->json(['error' => 'No estas autorizado'], 403);
+            
+            default:
+                # code...
+                break;
+        }
+    }
+
+    public function Release($id){
+        $user = Auth::user();
+
+        $appointment = Appointment::find($id);
+
+        if(!$appointment) {
+            return response()->json(['error' => 'No existe un turno con ese id'], 400);
+        }
+
+        switch ($user->role->description) {
+            case 'administrador' || 'empleado':
+
+                if($appointment->state === 'Disponible') {
+                    return response()->json(['error' => 'Ese turno ya esta disponible'], 400);
+                }
+
+                if($appointment->state === 'Completo') {
+                    $appointment->state = 'Reservado';
+                }
+
+                if($appointment->state === 'Reservado') {
+                    $appointment->state = 'Disponible';
+                    $appointment->user_id = null;
+                    $appointment->service_id = null;
+                    $appointment->vehicle_id = null;
+                }
+                $isSaved = $appointment->save();
+
+                if(!$isSaved){
+                    return response()->json(['error' => 'No se pudo guardar'], 400);
+                }
+
+                return response()->json(new AppointmentResource($appointment), 200);
+
             case 'cliente':
 
                 if($appointment->user_id != $user->id) {
@@ -102,12 +145,52 @@ class AppointmentController extends Controller
                 $appointment->user_id = null;
                 $appointment->service_id = null;
                 $appointment->vehicle_id = null;
-                $appointment->save();
+                $isSaved = $appointment->save();
 
-                return response()->json(['message' => 'Se quito de tus turnos reservados'], 200);
+                if(!$isSaved){
+                    return response()->json(['error' => 'No se pudo guardar'], 400);
+                }
+
+                return response()->json(new AppointmentResource($appointment), 200);
             
             default:
-                # code...
+                return response()->json(['error' => 'No definido'], 400);
+                break;
+        }
+    }
+    public function Complete($id){
+        $user = Auth::user();
+
+        $appointment = Appointment::find($id);
+
+        if(!$appointment) {
+            return response()->json(['error' => 'No existe un turno con ese id'], 400);
+        }
+
+        switch ($user->role->description) {
+            case 'administrador' || 'empleado':
+
+                if($appointment->state === 'Completo') {
+                    return response()->json(['error' => 'Ese turno ya esta Completo'], 400);
+                }
+                
+                if($appointment->state === 'Disponible') {
+                    return response()->json(['error' => 'No puedes completar un turno disponible'], 400);
+                }
+
+                $appointment->state = 'Completo';
+                $isSaved = $appointment->save();
+
+                if(!$isSaved){
+                    return response()->json(['error' => 'No se pudo guardar'], 400);
+                }
+
+                return response()->json(new AppointmentResource($appointment), 200);
+
+            case 'cliente':
+                return response()->json(['error' => 'No estas autorizado'], 403);
+            default:
+                return response()->json(['error' => 'No definido'], 400);
                 break;
         }
     }
