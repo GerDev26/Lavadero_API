@@ -25,6 +25,13 @@ class Appointment extends Model
         'vehicle_id',
     ];
 
+    public function release(){
+        $this->state = 'Disponible';
+        $this->user_id = null;
+        $this->service_id = null;
+        $this->vehicle_id = null;
+    } 
+
     public function user(){
         return $this->belongsTo(User::class);
     }

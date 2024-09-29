@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->float('value');
             $table->timestamps();
-            $table->date('drop_at');
+            $table->date('drop_at')->nullable();
 
             $table->unsignedBigInteger('service_id')->nullable();
             $table->unsignedBigInteger('type_of_vehicle_id')->nullable();

@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\PriceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Models\Appointment;
@@ -63,7 +64,7 @@ Route::get('/typeOfVehicles', [VehicleController::class, 'getAllTypeOfVehicles']
 
 
 
-
+Route::get('/prices', [PriceController::class, 'getAll']);
 Route::get('/dates', [AppointmentController::class, 'getAllDates']);
 Route::get('/appointments', [AppointmentController::class, 'getAllAppointments']);
 Route::post('/appointments', [AppointmentController::class, 'adminStore']);

@@ -43,8 +43,13 @@ class AppointmentController extends Controller
     }
 
 
-    public function getAllAppointments(){
-        $appointments = Appointment::all();
+    public function getAllAppointments(Request $request){
+        $date = $request->query('date');
+        if($date){
+            $appointments = Appointment::where('date', $date)->get();
+        } else {
+            $appointments = Appointment::all();
+        }
         return AppointmentResource::collection($appointments);
     }
 
@@ -90,14 +95,11 @@ class AppointmentController extends Controller
                 }
 
                 return response()->json(['message' => 'Se elimino con exito'], 200);
-            case 'empleado':
+            case 'empleado' || 'cliente':
                 return response()->json(['error' => 'No estas autorizado'], 403);
-            case 'cliente':
-                return response()->json(['error' => 'No estas autorizado'], 403);
-            
+                
             default:
-                # code...
-                break;
+                return response()->json(['error' => 'Rol inexistente'], 400);
         }
     }
 
@@ -112,21 +114,22 @@ class AppointmentController extends Controller
 
         switch ($user->role->description) {
             case 'administrador' || 'empleado':
-
-                if($appointment->state === 'Disponible') {
-                    return response()->json(['error' => 'Ese turno ya esta disponible'], 400);
+                
+                switch ($appointment->state) {
+                    case 'Disponible':
+                        return response()->json(['error' => 'Ese turno ya esta disponible'], 400);
+                    case 'Reservado':
+                        $appointment->release();
+                        break;
+                    case 'Completo':
+                        $appointment->state = 'Reservado';
+                        break;
+                    
+                    default:
+                        return response()->json(['error' => 'Estado del turno no valido'], 400);
+                        break;
                 }
 
-                if($appointment->state === 'Completo') {
-                    $appointment->state = 'Reservado';
-                }
-
-                if($appointment->state === 'Reservado') {
-                    $appointment->state = 'Disponible';
-                    $appointment->user_id = null;
-                    $appointment->service_id = null;
-                    $appointment->vehicle_id = null;
-                }
                 $isSaved = $appointment->save();
 
                 if(!$isSaved){
@@ -141,10 +144,11 @@ class AppointmentController extends Controller
                     return response()->json(['error' => 'Este turno no te pertenece'], 401);
                 }
 
-                $appointment->state = 'Disponible';
-                $appointment->user_id = null;
-                $appointment->service_id = null;
-                $appointment->vehicle_id = null;
+                if($appointment->state === 'Completo') {
+                    return response()->json(['error' => 'No puedes liberar un turno ya completo'], 401);
+                }
+
+                $appointment->release();
                 $isSaved = $appointment->save();
 
                 if(!$isSaved){
