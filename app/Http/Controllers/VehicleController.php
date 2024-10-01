@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -157,9 +158,14 @@ class VehicleController extends Controller
         return response()->json(new VehicleResource($vehicle) , 200);
     }
     public function getAllTypeOfVehicles(){
-        return TypeOfVehicle::all();
+        return Cache::remember('vehicles.all', 60, function() {
+            return TypeOfVehicle::all();
+        });
     }
+    
     public function getAllServices(){
-        return Service::all();
+        return Cache::remember('services.all', 60, function() {
+            return Service::all();
+        });
     }
 }
