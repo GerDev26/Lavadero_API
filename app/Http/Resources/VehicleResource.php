@@ -18,6 +18,7 @@ class VehicleResource extends JsonResource
             'id' => $this->id,
             'vehicleDomain' => $this->domain,
             'vehicleType' => $this->typeOfVehicle->description,
+            'state' => $this->state
         ];
     }
 }

@@ -53,6 +53,17 @@ class AppointmentController extends Controller
         return AppointmentResource::collection($appointments);
     }
 
+    public function appoinmentsWeek(){
+
+        $inicioDeSemana = Carbon::now()->startOfWeek();
+        $finDeSemana = Carbon::now()->addDays(7);
+
+        $appointments = Appointment::whereBetween('date', [$inicioDeSemana, $finDeSemana])->where('state', 'Disponible')->get();
+
+        return response()->json(AppointmentResource::collection($appointments), 200); 
+
+    }
+
     public function listDatesWithAppointments()
     {
         $appointments = Appointment::with('service', 'user', 'vehicle', 'dates')->get();

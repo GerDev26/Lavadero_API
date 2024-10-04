@@ -46,7 +46,7 @@ class UserController extends Controller
             return response()->json(['error' => 'El usuario no existe'], 400);
         }
 
-        $vehicles = Vehicle::where('user_id', $userId)->get();
+        $vehicles = Vehicle::where('user_id', $userId,)->where('state', true)->get();
 
         $formattedVehicles = VehicleResource::collection($vehicles);
         return response()->json($formattedVehicles);

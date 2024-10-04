@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 use App\Http\Resources\VehicleResource;
+use App\Models\Appointment;
 use App\Models\Service;
 use App\Models\TypeOfVehicle;
 use App\Models\User;
@@ -56,17 +57,26 @@ class VehicleController extends Controller
                 return response()->json(new VehicleResource($vehicle), 201);
                 
             case 'cliente':
-                $vehicle = Vehicle::where('domain', $request->vehicleDomain)->where('user_id', $user->id)->first();
-        
+                $vehicle = Vehicle::where('domain', $request->vehicleDomain)->first();
+
+                
                 if($vehicle){
-                    return response()->json(['message' => 'Ya tienes este vehiculo cargado'], 400);
+                    if($vehicle->user_id === null && $vehicle->state === 0) {
+                        $vehicle->user_id = $user->id;
+                        $vehicle->state = 1;
+                        $vehicle->save();
+                    } else {
+                        return response()->json(['message' => 'Ya tienes este vehiculo cargado'], 400);
+                    }
+
+                } else {
+                    $vehicle = Vehicle::create([
+                        'domain' => $request->vehicleDomain,
+                        'user_id' => $user->id,
+                        'type_id' => $request->vehicleType,
+                    ]);
                 }
                 
-                $vehicle = Vehicle::create([
-                    'domain' => $request->vehicleDomain,
-                    'user_id' => $user->id,
-                    'type_id' => $request->vehicleType,
-                ]);
         
                 return response()->json(new VehicleResource($vehicle), 201);
             
@@ -89,10 +99,25 @@ class VehicleController extends Controller
                 if ($user->id != $vehicle->user_id) {
                     return response()->json(['error' => 'Ese vehículo no te pertenece'], 401);
                 }
+
+                $Appointments = Appointment::where('vehicle_id', $vehicle->id)->get();
+
+                $Appointments->each(function ($app) {
+                    if($app->state === 'Reservado') {
+                        $app->release();
+                        $app->save();
+                    }
+                });
+
+                $vehicle->state = 0;
+                $vehicle->user_id = null;
+                $vehicle->save();
                 break;
     
             case 'administrador':
-                    //code...
+                if (!$vehicle->delete()) {
+                    return response()->json(['error' => 'No se pudo eliminar el registro'], 400);
+                }
                 break;
     
             case 'empleado':
@@ -103,9 +128,7 @@ class VehicleController extends Controller
                 return response()->json(['error' => 'Rol inexistente'], 401);
         }
     
-        if (!$vehicle->delete()) {
-            return response()->json(['error' => 'No se pudo eliminar el registro'], 400);
-        }
+
     
         return response()->json(['mensaje' => 'Se eliminó el registro'], 200);
     }    

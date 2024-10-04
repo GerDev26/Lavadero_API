@@ -67,6 +67,7 @@ Route::get('/typeOfVehicles', [VehicleController::class, 'getAllTypeOfVehicles']
 Route::get('/prices', [PriceController::class, 'getAll']);
 Route::get('/dates', [AppointmentController::class, 'getAllDates']);
 Route::get('/appointments', [AppointmentController::class, 'getAllAppointments']);
+Route::get('/appointmentsWeek', [AppointmentController::class, 'appoinmentsWeek']);
 Route::post('/appointments', [AppointmentController::class, 'adminStore']);
 Route::get('/appointments/{date}', [AppointmentController::class, 'getAppointmentsByDate']);
 
