@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(PriceSeeder::class);
         User::factory(10)->create();
-        Appointment::factory(10)->create();
+        Appointment::factory(40)->create();
         Vehicle::factory(10)->create();
     }
 }

@@ -47,11 +47,23 @@ class PriceController extends Controller
                 $service = 4;
                 $prices->where('service_id', $service);
                 break;
-            
+            case 'lavado estandar y motor':
+                $service = 5;
+                $prices->where('service_id', $service);
+                break;
+            case 'lavado estandar y tapizado':
+                $service = 6;
+                $prices->where('service_id', $service);
+                break;
+            case 'motor y tapizado':
+                $service = 7;
+                $prices->where('service_id', $service);
+                break;
             default:
-                # code...
+                // Código para manejar un servicio no encontrado
                 break;
         }
+        
         
         return PriceResource::collection($prices->get());
     }

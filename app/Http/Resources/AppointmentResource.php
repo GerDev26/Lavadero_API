@@ -20,7 +20,7 @@ class AppointmentResource extends JsonResource
             return [
                 'id' => $this->id,
                 'state' => $this->state,
-                'hour' => $hour->format('H:m'),
+                'hour' => $hour->format('H:i'),
                 'date' => $date->format('d-m-Y'),
                 'user' => $this->user ?? null,
                 'service' => $this->service->service_name ?? null,
@@ -30,14 +30,14 @@ class AppointmentResource extends JsonResource
             return [
                 'id' => $this->id,
                 'state' => $this->state,
-                'hour' => $hour->format('H:m'),
+                'hour' => $hour->format('H:i'),
                 'date' => $date->format('d-m-Y'),
             ];
         } elseif($this->state === 'Completo') {
             return [
                 'id' => $this->id,
                 'state' => $this->state,
-                'hour' => $hour->format('H:m'),
+                'hour' => $hour->format('H:i'),
                 'date' => $date->format('d-m-Y'),
                 'user' => $this->user ?? null,
                 'service' => $this->service->service_name ?? null,

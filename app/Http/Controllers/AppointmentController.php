@@ -45,8 +45,12 @@ class AppointmentController extends Controller
 
     public function getAllAppointments(Request $request){
         $date = $request->query('date');
+        $month = $request->query('month');
+
         if($date){
             $appointments = Appointment::where('date', $date)->get();
+        } else if($month) {
+            $appointments = Appointment::whereMonth('date', $month)->get();
         } else {
             $appointments = Appointment::all();
         }
@@ -210,8 +214,9 @@ class AppointmentController extends Controller
         }
     }
 
-    public function getAppointmentsByDate($date)
+    public function getAppointmentsByDate($date, $month)
     {
+        return response()->json(['data' => 'puta'], 200);
 
         $date = Carbon::parse($date);
         $formattedDate = $date->format('Y-m-d');

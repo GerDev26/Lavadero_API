@@ -17,6 +17,7 @@ return new class extends Migration
             $table->float('price')->nullable();
             $table->time('hour');
             $table->date('date');
+            
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('service_id')->nullable();
@@ -34,6 +35,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('appointments');
-        Schema::dropIfExists('schedules');
     }
 };
