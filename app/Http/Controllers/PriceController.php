@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePriceRequest;
+use App\Http\Requests\UpdatePriceRequest;
 use App\Http\Resources\PriceResource;
 use App\Models\Price;
 use Illuminate\Http\Request;
@@ -67,4 +69,29 @@ class PriceController extends Controller
         
         return PriceResource::collection($prices->get());
     }
+    public function store(StorePriceRequest $request)
+    {
+        $price = Price::create([
+            'type_of_vehicle_id' => $request->vehicleType,
+            'service_id' => $request->service_id,
+            'value' => $request->value
+        ]);
+    
+        return response()->json(new PriceResource($price), 200);
+    }
+    public function update(UpdatePriceRequest $request, $id)
+    {
+
+        $price = Price::findOrFail($id);
+        $price->update([
+            'type_of_vehicle_id' => $request->vehicleType ?? $price->type_of_vehicle_id,
+            'service_id' => $request->service_id ?? $price->service_id,
+            'value' => $request->value ?? $price->value
+        ]);
+
+        return response()->json(new PriceResource($price), 200);
+    }
+
+
+
 }

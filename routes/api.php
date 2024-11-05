@@ -7,13 +7,18 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
-use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     
     Route::middleware('role:administrador')->group(function () {
-        
+        Route::post('/users/', [UserController::class, 'Store']);
+        Route::delete('/users/{id}', [UserController::class, 'Destroy']);
+        Route::patch('/users/{id}', [UserController::class, 'Update']);
+        Route::patch('/users', [UserController::class, 'Store']);
+        Route::post('/appointments/', [AppointmentController::class, 'AdminStore']);
+        Route::post('/prices/', [PriceController::class, 'store']);
+        Route::patch('/prices/{id}', [PriceController::class, 'update']);
     });
     Route::middleware('role:empleado')->group(function () {
         
@@ -32,8 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->controller(UserController::class)->group(function () {
         Route::get('/', 'getAll');
         Route::get('/vehicles', 'getUserVehicles');
-        Route::post('/', 'Store');
-        Route::delete('/{id}', 'Destroy');
         Route::get('/role', 'checkRole');
     });
     Route::get('/users/appointments', [AppointmentController::class, 'userAppointments']);
@@ -68,7 +71,6 @@ Route::get('/prices', [PriceController::class, 'getAll']);
 Route::get('/dates', [AppointmentController::class, 'getAllDates']);
 Route::get('/appointments', [AppointmentController::class, 'getAllAppointments']);
 Route::get('/appointmentsWeek', [AppointmentController::class, 'appoinmentsWeek']);
-Route::post('/appointments', [AppointmentController::class, 'adminStore']);
 Route::get('/appointments/{date}', [AppointmentController::class, 'getAppointmentsByDate']);
-
+Route::get('/roles', [UserController::class, 'getAllRoles']);
 

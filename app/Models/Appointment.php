@@ -30,6 +30,7 @@ class Appointment extends Model
         $this->user_id = null;
         $this->service_id = null;
         $this->vehicle_id = null;
+        $this->price = 0;
     } 
 
     public function user(){

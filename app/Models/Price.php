@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Price extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'type_of_vehicle_id',
+        'service_id',
+        'value'
+    ];
     public function typeOfVehicle(){
         return $this->belongsTo(TypeOfVehicle::class);
     }

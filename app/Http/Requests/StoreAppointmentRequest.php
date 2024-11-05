@@ -25,30 +25,12 @@ class StoreAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'price' => 'numeric',
-            'user_id' => 'integer|min:1|exists:users,id|exists:vehicles,user_id',
-            'service_id' => 'integer|min:1|exists:services,id',
-            'vehicle_id' => 'integer|min:1|exists:vehicles,id',
+            'price' => 'sometimes|numeric',
+            'user_id' => 'sometimes|integer|min:1|exists:users,id|exists:vehicles,user_id',
+            'service_id' => 'sometimes|integer|min:1|exists:services,id',
+            'vehicle_id' => 'sometimes|integer|min:1|exists:vehicles,id',
             'date' => 'required',
             'hour' => 'required',
         ];
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
-     */
-    protected function failedValidation(Validator $validator)
-    {
-
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Validation failed',
-            'errors' => $validator->errors(),
-        ], 422));
     }
 }
